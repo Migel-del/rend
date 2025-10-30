@@ -4,7 +4,7 @@ USER root
 
 # Устанавливаем OpenSSH server и необходимые утилиты
 RUN apt-get update && apt-get install -y openssh-server && \
-    mkdir -p /var/run/sshd && \              # ← добавлено -p
+    mkdir -p /var/run/sshd && \
     echo 'root:root' | chpasswd && \
     usermod -s /bin/bash root && \
     passwd -u root && \
