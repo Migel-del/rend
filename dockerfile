@@ -9,14 +9,18 @@ RUN apt-get update && apt-get install -y openssh-server && \
     usermod -s /bin/bash root && passwd -u root && \
     mkdir -p /root/.ssh && chmod 700 /root/.ssh
 
-# Настраиваем nginx
+# Удаляем дефолтный nginx-конфиг
 RUN rm /etc/nginx/conf.d/default.conf
+
+# ⚙️ Исправляем mime.types (используем стандартный путь, чтобы не было ошибки)
+RUN mkdir -p /rend && cp /etc/nginx/mime.types /rend/mime.types
 
 # Копируем твои конфиги
 COPY nginx.conf /rend/nginx.conf
 COPY nginx2.conf /rend/nginx2.conf
 
+# Открываем порты
 EXPOSE 8080 22
 
-# Запуск nginx (и SSH, если нужно)
+# Запускаем SSH и Nginx
 CMD /usr/sbin/sshd -D & nginx -c /rend/nginx2.conf -g 'daemon off;'
